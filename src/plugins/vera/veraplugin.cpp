@@ -100,7 +100,7 @@ bool VeraPlugin::write(const Map *map, const QString &fileName, Options options)
 			const Cell &cell = tileLayer->cellAt(x, y);
 			if (const Tile *tile = cell.tile()) {
 				// write out two bytes
-				
+
 				// first byte: tile index (7:0)
 				stream << (quint8)cell.tileId();
 
