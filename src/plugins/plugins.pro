@@ -11,6 +11,7 @@ SUBDIRS = csv \
           replicaisland \
           tbin \
           tengine \
+          vera \
           yy
 
 include(python/find_python.pri)
