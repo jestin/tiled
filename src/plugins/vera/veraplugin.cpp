@@ -40,13 +40,6 @@
 using namespace Tiled;
 using namespace Vera;
 
-template <typename T>
-static T optionalProperty(const Object *object, const QString &name, const T &def)
-{
-    const QVariant var = object->resolvedProperty(name);
-    return var.isValid() ? var.value<T>() : def;
-}
-
 VeraPlugin::VeraPlugin()
 {
 }
