@@ -137,7 +137,7 @@ QString VeraPlugin::errorString() const
 
 QString VeraPlugin::nameFilter() const
 {
-    return tr("VERA tile map files (*.bin)");
+    return tr("VERA tile map files (*.BIN)");
 }
 
 QString VeraPlugin::shortName() const
