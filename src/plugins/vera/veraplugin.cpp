@@ -88,6 +88,9 @@ bool VeraPlugin::write(const Map *map, const QString &fileName, Options options)
 		return false;
 	}
 
+	// write out 2 byte header
+	 stream << (quint8)0 << (quint8)0;
+
 	for (int y = 0; y < height; ++y) {
 		for (int x = 0; x < width; ++x) {
 			const Cell &cell = tileLayer->cellAt(x, y);
