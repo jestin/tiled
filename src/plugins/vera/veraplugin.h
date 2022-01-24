@@ -27,17 +27,24 @@
 
 namespace Vera {
 
-class VERASHARED_EXPORT VeraPlugin : public Tiled::WritableMapFormat
+class VERASHARED_EXPORT VeraPlugin : public Tiled::MapFormat
 {
     Q_OBJECT
+    Q_INTERFACES(Tiled::MapFormat)
     Q_PLUGIN_METADATA(IID "org.mapeditor.MapFormat" FILE "plugin.json")
 
 public:
-    VeraPlugin();
+    explicit VeraPlugin(QObject *parent = nullptr)
+        : MapFormat(parent)
+    {}
 
+    std::unique_ptr<Tiled::Map> read(const QString &fileName) override;
+    bool supportsFile(const QString &fileName) const override;
     bool write(const Tiled::Map *map, const QString &fileName, Options options) override;
     QString errorString() const override;
     QString shortName() const override;
+
+    Capabilities capabilities() const override { return ReadWrite; }
 
 protected:
     QString nameFilter() const override;

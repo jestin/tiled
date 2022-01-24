@@ -40,8 +40,43 @@
 using namespace Tiled;
 using namespace Vera;
 
-VeraPlugin::VeraPlugin()
+bool VeraPlugin::supportsFile(const QString &fileName) const
 {
+	return fileName.endsWith(QLatin1String(".BIN"), Qt::CaseSensitive);
+}
+
+std::unique_ptr<Tiled::Map> VeraPlugin::read(const QString &fileName)
+{
+	// I may want to consider making this `read` function read a pair of files:
+	// a map _and_ a tileset.  It's a little non-standard, but might be the
+	// best option since the two aren't really easy to separate.
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) {
+        mError = QCoreApplication::translate("File Errors", "Could not open file for reading.");
+        return nullptr;
+    }
+
+	// TODO: do all the work
+	QDataStream stream(&file);
+	stream.setByteOrder(QDataStream::LittleEndian);
+
+	// read memory location
+	quint16 location;
+	stream >> location;
+
+	// here is where we need to figure out the dimensions of the tile map.
+	// There are several options, so it's going to be hard to determine what
+	// the intended map is supposed to be.	
+
+	std::unique_ptr<Tiled::Map> map = nullptr;
+
+	// create the map and add a layer to it
+
+	// we'll probably need to figure out how to set a tile set to a map, so
+	// that the tile indexes we write to the cells make sense
+
+    return map;
 }
 
 bool VeraPlugin::write(const Map *map, const QString &fileName, Options options)
@@ -65,7 +100,7 @@ bool VeraPlugin::write(const Map *map, const QString &fileName, Options options)
 	// Now that we know this is a valid map, we can open the save file
 
 	SaveFile file(fileName);
-	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+	if (!file.open(QIODevice::WriteOnly)) {
 		mError = QCoreApplication::translate("File Errors", "Could not open file for writing.");
 		return false;
 	}
