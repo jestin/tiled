@@ -48,23 +48,38 @@ bool VeraPlugin::write(const Map *map, const QString &fileName, Options options)
 {
 	// Write out tile instances
 	LayerIterator iterator(map);
+	int layerNum = 0;
 
-	// only write out the first layer
-	const Layer *layer = iterator.next();
+	// Loop through all the layers
+	while(Layer *layer = iterator.next())
+	{
+		if (layer->layerType() != Layer::TileLayerType) {
+			break;
+		}
 
-	if (!layer) {
-		mError = QCoreApplication::translate("File Errors", "No layers found.");
+		// Now that we know this is a valid map, we can open the save file
+		if(!writeLayerToFile(layer, layerNum, fileName))
+		{
+			return false;
+		}
+
+		layerNum++;
+	}
+
+	if (!layerNum) {
+		mError = QCoreApplication::translate("File Errors", "No tile layers found.");
 		return false;
 	}
 
-	if (layer->layerType() != Layer::TileLayerType) {
-		mError = QCoreApplication::translate("File Errors", "Vera files require that layer 0 must be a tile layer.");
-		return false;
-	}
+	return true;
+}
 
-	// Now that we know this is a valid map, we can open the save file
+bool VeraPlugin::writeLayerToFile(const Layer* layer, const int layerNum, const QString& fileName)
+{
+	// name the file according to the layer
+	QString layerFileName = QString(fileName).insert(fileName.size() - 3, QString("%1.").arg(layerNum));
 
-	SaveFile file(fileName);
+	SaveFile file(layerFileName);
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		mError = QCoreApplication::translate("File Errors", "Could not open file for writing.");
 		return false;

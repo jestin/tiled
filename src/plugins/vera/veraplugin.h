@@ -44,6 +44,8 @@ protected:
 
 private:
     QString mError;
+
+	bool writeLayerToFile(const Tiled::Layer* layer, const int layerNum, const QString& fileName);
 };
 
 } // namespace Vera
